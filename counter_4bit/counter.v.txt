@@ -1,0 +1,24 @@
+// sync_counter_4bit.v
+// A simple 4-bit synchronous counter.
+
+module sync_counter_4bit (
+    input clk,      // Clock signal
+    input reset,    // Synchronous active-high reset
+    output [3:0] count // 4-bit output count (Q[3] is MSB)
+);
+
+// Internal register to hold the count value
+reg [3:0] count; 
+
+// Synchronous logic: sensitive to the positive edge of the clock
+always @(posedge clk) begin
+    if (reset) begin
+        // Reset state: Set count to 0
+        count <= 4'b0000;
+    end else begin
+        // Counting: Increment the count value
+        count <= count + 1;
+    end
+end
+
+endmodule

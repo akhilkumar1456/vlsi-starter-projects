@@ -1,0 +1,49 @@
+// sync_counter_4bit_tb.v
+// Testbench for the 4-bit synchronous counter.
+
+`timescale 1ns/1ns 
+
+module sync_counter_4bit_tb;
+
+    // Signal declarations (reg for inputs, wire for outputs)
+    reg clk_tb;
+    reg reset_tb;
+    wire [3:0] count_tb;
+
+    // Instantiate the Design Under Test (DUT)
+    sync_counter_4bit DUT (
+        .clk    (clk_tb),
+        .reset  (reset_tb),
+        .count  (count_tb)
+    );
+
+    // Initial block to generate the clock signal
+    initial begin
+        clk_tb = 0;
+        // Clock period is 20ns (50MHz frequency)
+        forever #10 clk_tb = ~clk_tb; 
+    end
+
+    // Initial block to apply reset and test vectors
+    initial begin
+        $dumpfile("counter.vcd");
+        $dumpvars(0, sync_counter_4bit_tb);  
+        
+        // 1. Initial Reset Phase
+        reset_tb = 1; // Assert reset
+        #20;         // Hold reset for one full clock cycle
+        
+        // 2. Counting Phase
+        reset_tb = 0; // Deassert reset
+        #200;        // Run simulation for 200ns (10 clock cycles)
+        
+        // 3. Finish Simulation
+        $finish; 
+    end
+
+    // Monitor outputs (optional)
+    initial begin
+        $monitor("Time=%0d, Reset=%b, Count=%d", $time, reset_tb, count_tb);
+    end
+
+endmodule
